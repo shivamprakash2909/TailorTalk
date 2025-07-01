@@ -7,7 +7,6 @@ const ChatBot = () => {
   const [message, setMessage] = useState("");
   const server =
     import.meta.env.MODE === "development" ? import.meta.env.VITE_ORIGIN : import.meta.env.VITE_ORIGIN_PROD;
-  console.log("here, server: ", server);
   const sendMessage = async () => {
     if (!message.trim()) return;
 
