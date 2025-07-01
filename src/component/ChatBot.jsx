@@ -5,7 +5,9 @@ import "./ChatBot.css";
 const ChatBot = () => {
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
-
+  const server =
+    import.meta.env.MODE === "development" ? import.meta.env.VITE_ORIGIN : import.meta.env.VITE_ORIGIN_PROD;
+  console.log("here, server: ", server);
   const sendMessage = async () => {
     if (!message.trim()) return;
 
@@ -15,7 +17,7 @@ const ChatBot = () => {
 
     try {
       // 1. Send user message to Gemini chat
-      const geminiRes = await axios.post("http://localhost:8080/api/gemini/chat", {
+      const geminiRes = await axios.post(`${server}/api/gemini/chat`, {
         message: userMessage,
       });
 
@@ -24,13 +26,13 @@ const ChatBot = () => {
 
       // 2. If intent to book detected, extract & book
       if (/book|schedule|meeting|call/i.test(userMessage)) {
-        const extractRes = await axios.post("http://localhost:8080/api/gemini/extract", {
+        const extractRes = await axios.post(`${server}/api/gemini/extract`, {
           message: userMessage,
         });
 
         const { summary, start, end } = extractRes.data;
 
-        const calendarRes = await axios.post("http://localhost:8080/api/calendar/book", {
+        const calendarRes = await axios.post(`${server}/api/calendar/book`, {
           summary,
           start,
           end,
