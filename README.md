@@ -1,12 +1,51 @@
-# React + Vite
+# 🤖 TailorTalk - React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TailorTalk is a conversational AI assistant that helps users schedule meetings via natural language. This is the **React frontend** that communicates with a backend powered by LLMs like **Gemini** and integrates with **Google Calendar** to book events.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- ✨ Chat interface powered by AI (Gemini)
+- 📅 Automatically books Google Calendar events
+- 🧠 Maintains chat history in UI
+- 🔗 Clickable calendar links
+- 🧑‍💻 Modern, clean UI built in React
+- 💬 Handles conversational follow-ups
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🖼️ Preview
+
+![Live link](https://your-screenshot-url.com/preview.png)
+
+---
+
+## 🧩 Backend Integration
+
+Make sure the **TailorTalk backend** is running.
+
+### 🔗 GitHub (Backend):
+
+👉 [TailorTalk Server Repository](https://github.com/shivamprakash2909/TailorTalk-Server)
+
+---
+
+### 🌐 Backend API Endpoints
+
+| Endpoint                   | Purpose                         |
+| -------------------------- | ------------------------------- |
+| `POST /api/gemini/chat`    | Chat with Gemini / Gemma LLM    |
+| `POST /api/gemini/extract` | Extract event details           |
+| `POST /api/calendar/book`  | Book event into Google Calendar |
+
+---
+
+## 🔧 Setup Instructions
+
+1. **Clone the frontend repository**
+
+```bash
+git clone https://github.com/shivamprakash2909/TailorTalk.git
+cd tailortalk-frontend
+```
