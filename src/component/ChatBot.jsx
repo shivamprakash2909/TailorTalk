@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./ChatBot.css";
 
-export default function ChatBot() {
+const ChatBot = () => {
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -87,4 +87,5 @@ export default function ChatBot() {
       </div>
     </div>
   );
-}
+};
+export default ChatBot;
