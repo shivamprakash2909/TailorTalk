@@ -15,11 +15,9 @@ TailorTalk is a conversational AI assistant that helps users schedule meetings v
 
 ---
 
-## 🖼️ Preview
+## 🖼️ Live Link
 
-![Live link](https://tailor-talk-mu.vercel.app/)
-
----
+## **👉 [https://tailor-talk-mu.vercel.app](https://tailor-talk-mu.vercel.app)**
 
 ## 🧩 Backend Integration
 
