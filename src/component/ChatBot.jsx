@@ -5,8 +5,10 @@ import "./ChatBot.css";
 const ChatBot = () => {
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
+
   const server =
     import.meta.env.MODE === "development" ? import.meta.env.VITE_ORIGIN : import.meta.env.VITE_ORIGIN_PROD;
+
   const sendMessage = async () => {
     if (!message.trim()) return;
 
@@ -15,20 +17,61 @@ const ChatBot = () => {
     setMessage("");
 
     try {
-      // 1. Send user message to Gemini chat
+      // 1. General Gemini chat response
       const geminiRes = await axios.post(`${server}/api/gemini/chat`, {
         message: userMessage,
       });
-
       const reply = geminiRes.data?.reply || "🤖 (no reply)";
       setChat((prev) => [...prev, { user: false, text: reply }]);
 
-      // 2. If intent to book detected, extract & book
-      if (/book|schedule|meeting|call/i.test(userMessage)) {
-        const extractRes = await axios.post(`${server}/api/gemini/extract`, {
-          message: userMessage,
-        });
+      // 2. Extract booking or date intent
+      const extractRes = await axios.post(`${server}/api/gemini/extract`, {
+        message: userMessage,
+      });
 
+      const { type } = extractRes.data;
+
+      // 2A. If it's a dateQuery → fetch and show events
+      if (type === "dateQuery" && extractRes.data.date) {
+        const date = extractRes.data.date;
+        const listRes = await axios.post(`${server}/api/calendar/list`, { date });
+        const events = listRes.data.events;
+
+        if (!events || events.length === 0) {
+          setChat((prev) => [...prev, { user: false, text: `📭 No events found on ${date}.` }]);
+        } else {
+          setChat((prev) => [
+            ...prev,
+            {
+              user: false,
+              element: (
+                <span>
+                  🗓️ <strong>Your Events on {date}:</strong>
+                  <br />
+                  {events.map((e, i) => {
+                    const startTime = e.start?.slice(11, 16) || "??:??";
+                    const endTime = e.end?.slice(11, 16) || "??:??";
+                    return (
+                      <div key={i} style={{ marginBottom: "8px" }}>
+                        🔸 <strong>{e.summary || "No Title"}</strong> ({startTime} - {endTime}){" "}
+                        {e.link && (
+                          <a href={e.link} target="_blank" rel="noopener noreferrer">
+                            View
+                          </a>
+                        )}
+                      </div>
+                    );
+                  })}
+                </span>
+              ),
+            },
+          ]);
+        }
+        return;
+      }
+
+      // 2B. If it's a booking → book event
+      if (type === "booking" && extractRes.data.summary && extractRes.data.start && extractRes.data.end) {
         const { summary, start, end } = extractRes.data;
 
         const calendarRes = await axios.post(`${server}/api/calendar/book`, {
@@ -39,7 +82,6 @@ const ChatBot = () => {
 
         const link = calendarRes.data.link;
 
-        // 3. Push a clickable booking confirmation
         setChat((prev) => [
           ...prev,
           {
@@ -89,4 +131,5 @@ const ChatBot = () => {
     </div>
   );
 };
+
 export default ChatBot;
